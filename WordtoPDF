@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+"""
+Spyder Editor
+
+This is a temporary script file.
+"""
+
+import os,shutil
+from win32com.client import Dispatch,constants,gencache
+def word2Pdf(wordFile,pdfFile):
+    word = gencache.EnsureDispatch('Word.Application')
+    doc = word.Documents.Open(wordFile, ReadOnly = 1)
+    doc.ExportAsFixedFormat(pdfFile,
+                            constants.wdExportFormatPDF,
+                            Item = constants.wdExportDocumentWithMarkup,
+                            CreateBookmarks = constants.wdExportCreateHeadingBookmarks)
+    word.Quit(constants.wdDoNotSaveChanges)
+
+openfile = r'E:\助教\实验一'
+savefile = r'E:\助教\实验一'
+movefilePath = r'word'
+os.chdir(openfile)
+wordFiles = [fn for fn in os.listdir('.') if fn.endswith(('.doc','.docx'))]
+for wordFile in wordFiles:
+    wordFile = os.path.abspath(wordFile)
+    index = wordFile.rindex('\\')
+    index2 = wordFile.rindex('.')
+    pdfFile = savefile+wordFile[index:index2] +'.pdf'
+    print(pdfFile)
+    word2Pdf(wordFile,pdfFile)
+    shutil.move(wordFile,movefilePath);
